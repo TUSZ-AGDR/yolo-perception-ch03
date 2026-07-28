@@ -1,0 +1,16 @@
+name: yolo_coco
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pyyaml
+  - opencv
+  - matplotlib
+  - setuptools
+  - pip:
+    - numpy<2
+    - torch
+    - torchvision
+    - ultralytics

@@ -1,0 +1,21 @@
+# COCO10 教程数据集（10 类，均衡采样）
+# 从 COCO train2017 中采样，每类至少 200 实例，总计约 3000-4000 张
+#
+# 用法：python scripts/train.py --data config/coco10.yaml --epochs 50
+
+path: data/coco10             # 数据集根目录
+train: images/train           # 训练图片
+val: images/val               # 验证图片
+
+# 10 类
+names:
+  0: person
+  1: bicycle
+  2: car
+  3: motorcycle
+  4: bus
+  5: truck
+  6: cat
+  7: dog
+  8: chair
+  9: bottle

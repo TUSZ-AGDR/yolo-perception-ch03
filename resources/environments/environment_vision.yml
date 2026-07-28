@@ -1,0 +1,17 @@
+name: yolo_vision
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - pyyaml
+  - opencv
+  - matplotlib
+  - setuptools
+  - pip:
+    - numpy<2
+    - torch
+    - torchvision
+    - ultralytics
+    - colcon-common-extensions

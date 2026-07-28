@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Conda
+env/
+
+# ROS2 build artifacts
+build/
+install/
+log/
+
+# Training outputs
+runs/
+outputs/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Large datasets (not tracked)
+*.zip
+*.tar.gz
