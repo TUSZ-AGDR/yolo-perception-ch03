@@ -1,6 +1,0 @@
-path: /home/hiro/workspace/yolo_ros/block_dataset
-train: train/images
-val: val/images
-names:
-  0: block
-nc: 1

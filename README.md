@@ -1,74 +1,67 @@
 # YOLO 视觉感知实验（第三章）
 
-围绕 YOLOv8 目标检测的实践实验，覆盖标准数据集训练与 Gazebo 仿真部署。
-
-## 实验概览
-
-| # | 内容 | 核心目录 |
-|---|------|----------|
-| 1 | COCO 子集上完成 YOLOv8 训练、评估与推理 | `src/yolo_coco/` |
-| 2 | Gazebo 仿真中构建 ROS2 实时检测节点，域随机化场景生成、自动标注与模型训练 | `src/yolo_vision/` + `src/scripts/` |
+围绕 YOLOv8 目标检测的实践教程，覆盖 COCO10 数据集上的全流程实验：原理学习、环境搭建、数据准备、模型训练、推理测试与性能分析。
 
 ## 目录结构
 
 ```
 .
-├── docs/              # 教程正文（Markdown + PDF）
-├── src/
-│   ├── scripts/       # 工具脚本（自动标注、数据生成、训练启动等）
-│   ├── yolo_coco/     # 实验一：COCO 检测
-│   └── yolo_vision/   # 实验二：ROS2 视觉节点
-└── resources/
-    ├── datasets/      # block_dataset 训练数据
-    ├── environments/  # Conda 环境配置
-    └── models/        # 预训练权重
+├── docs/                        # 教程正文（第3章 Markdown）
+│   └── chapter03_yolo_perception.md
+├── src/yolo_coco/               # 实验源码（唯一的工作目录）
+│   ├── environment_coco.yml     # Conda 环境配置
+│   ├── yolov8n.pt               # YOLOv8n 预训练权重
+│   ├── config/                  # 数据集配置文件
+│   ├── scripts/                 # 训练/评估/推理/视频流脚本
+│   └── assets/                  # 示例图片、训练曲线、街景视频
+└── resources/                   # 附加资源
+    └── models/
+        └── yolo_coco_best.pt    # 已训练好的 COCO10 模型（可跳过训练直接推理）
 ```
 
 ## 环境要求
 
-- **OS**: Ubuntu 24.04
-- **ROS2**: Jazzy Jalisco
-- **Gazebo**: Harmonic
-- **Python**: 3.12 (Conda)
-- **GPU**（可选）: NVIDIA + CUDA ≥ 11.8
+- **操作系统**：Windows 10+ / macOS / Linux
+- **Python**：3.9+（Conda 环境）
+- **GPU**（可选）：NVIDIA + CUDA ≥ 11.8，纯 CPU 可运行
 
 ## 快速开始
 
-### 1. 配置环境
-
 ```bash
-# 实验一（COCO 检测）
-conda env create -f resources/environments/environment_coco.yml
+# 1. 创建环境
+cd src/yolo_coco
+conda env create -f environment_coco.yml
+conda activate yolo_coco
 
-# 实验二（ROS2 视觉节点）
-conda env create -f resources/environments/environment_vision.yml
+# 2. 准备数据集
+python scripts/prepare_coco10.py
+
+# 3. 训练（约 35 分钟 / GPU）
+python scripts/train.py --model yolov8n.pt --data config/coco10.yaml --epochs 50 --batch 16
+
+# 4. 评估
+python scripts/evaluate.py --model outputs/train/<时间戳>/weights/best.pt --data config/coco10.yaml
+
+# 5. 推理
+python scripts/detect.py --model outputs/train/<时间戳>/weights/best.pt --source data/coco10/images/val/000000000001.jpg --save
+
+# 6. 视频流检测
+python scripts/detect_video.py --model outputs/train/<时间戳>/weights/best.pt --source assets/street_scene.mp4 --show
 ```
 
-### 2. 展开工作目录
+详细步骤请阅读 `docs/chapter03_yolo_perception.md`。
 
-教程命令假定源码和资源位于同一扁平目录：
+## 实验链路
 
-```bash
-mkdir -p ~/yolo_workspace
-cp -r src/yolo_coco              ~/yolo_workspace/
-cp -r src/yolo_vision            ~/yolo_workspace/
-cp -r src/scripts                ~/yolo_workspace/
-cp -r resources/datasets/block_dataset ~/yolo_workspace/
-cp    resources/models/*.pt      ~/yolo_workspace/
+```
+3.1 目的 → 3.2 原理 → 3.3 环境 → 3.4 数据 → 3.5 训练 → 3.6 推理（含视频流） → 3.7 分析 → 3.8 总结
 ```
 
-### 3. 运行实验
+## 核心指标（实测，RTX 2060）
 
-详见 `docs/chapter03_yolo_perception.md` 中各实验小节的步骤说明。
-
-## 模型权重
-
-| 文件 | 用途 | 大小 |
-|------|------|------|
-| `yolov8n.pt` | YOLOv8n 官方预训练权重 | 6 MB |
-| `yolo_coco_best.pt` | 实验一：COCO10 子集微调最优权重 | 6 MB |
-| `block_best.pt` | 实验二：block_dataset 训练最优权重 | 6 MB |
-
-## 许可证
-
-本项目仅用于教学目的。
+| 指标 | 数值 |
+|------|------|
+| mAP@0.5 | 0.552 |
+| mAP@0.5:0.95 | 0.356 |
+| 批量推理 | 64 FPS（15.7 ms/张） |
+| 视频流推理 | 42 FPS（24 ms/帧） |
