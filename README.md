@@ -65,3 +65,13 @@ python scripts/detect_video.py --model outputs/train/<时间戳>/weights/best.pt
 | mAP@0.5:0.95 | 0.356 |
 | 批量推理 | 64 FPS（15.7 ms/张） |
 | 视频流推理 | 42 FPS（24 ms/帧） |
+
+## 演示视频
+
+GitHub 中最稳定的播放方式是点击下方链接进入视频文件页播放：
+
+[点击播放 yolo_coco.mp4](resources/%E5%AE%9E%E9%AA%8C%E6%BC%94%E7%A4%BA%E8%A7%86%E9%A2%91/yolo_coco.mp4)
+
+如果当前 GitHub 页面支持 HTML 标签，也可直接在 README 内播放：
+
+<video src="resources/%E5%AE%9E%E9%AA%8C%E6%BC%94%E7%A4%BA%E8%A7%86%E9%A2%91/yolo_coco.mp4" controls width="100%"></video>
